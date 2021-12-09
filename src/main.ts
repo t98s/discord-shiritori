@@ -13,7 +13,11 @@ const fetchAll = async function (channel: TextChannel) {
     messages.push(...ret.values());
     if (ret.size < 100) break;
   }
-  return new Collection(messages.sort((a, b) => BigInt(a.id) < BigInt(b.id) ? 1 : -1).map(e => [e.id, e]));
+  return new Collection(
+    messages
+      .sort((a, b) => (BigInt(a.id) < BigInt(b.id) ? 1 : -1))
+      .map((e) => [e.content, e])
+  );
 }
 
 const client = new Client({ intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES });
@@ -46,7 +50,8 @@ client.on('messageCreate', async msg => {
   if( !(msg.channel instanceof TextChannel) ) return;
   if (msg.channelId != process.env.CHANNEL_ID ) return;
   const messages = await fetchAll(msg.channel)
-  if(messages.find(m => m.content == msg.content && m.id != msg.id)) {
+  const message = messages.get(msg.content);
+  if (message && message.id !== msg.id) {
     msg.reply("被ってるよ")
   }
 });
