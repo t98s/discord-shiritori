@@ -7,7 +7,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCE_PROJECT }}
-  GCE_INSTANCE: discord-shiritori
+  GCE_INSTANCE: discord-shiritori-vm
   GCE_INSTANCE_ZONE: us-west1-b
 
 jobs:
