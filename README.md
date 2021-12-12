@@ -4,5 +4,5 @@
 $ npm i
 $ export TOKEN=XXXXXXXXXXXXXXXXXXX
 $ export CHANNEL_ID=YYYYYYYYYYYYY
-$ npm run dev
+$ npm run start
 ```
