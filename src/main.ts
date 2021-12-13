@@ -55,6 +55,7 @@ client.on('ready', async () => {
     process.exit(1)
   }
   messages = await fetchAll(channel)
+  channel.send('[Announce] 再起動しました')
 });
 
 client.on('messageCreate', async msg => {
