@@ -22,7 +22,9 @@ const fetchAll = async function (channel: TextChannel) {
 
 const client = new Client({ intents: Intents.FLAGS.GUILDS | Intents.FLAGS.GUILD_MESSAGES });
 
-client.on('ready', () => {
+let messages:Collection<string, Message<boolean>> = new Collection([])
+
+client.on('ready', async () => {
   console.log(`
     へ(^o^)へ
     　 　|へ 膝、腰
@@ -43,17 +45,27 @@ client.on('ready', () => {
     ＞突然の死＜
     ￣Y^Y^Y^Y￣
   `);
+  if(!process.env.CHANNEL_ID){
+    console.log("環境変数 CHANNEL_ID が設定されていません")
+    process.exit(1)
+  }
+  const channel = await client.channels.fetch(process.env.CHANNEL_ID)
+  if(!channel || !(channel instanceof TextChannel) ){
+    console.log("環境変数 CHANNEL_ID からチャンネルが取得できませんでした")
+    process.exit(1)
+  }
+  messages = await fetchAll(channel)
 });
 
 client.on('messageCreate', async msg => {
+  console.log(msg)
   if (msg.author.bot) return;
   if( !(msg.channel instanceof TextChannel) ) return;
   if (msg.channelId != process.env.CHANNEL_ID ) return;
-  const messages = await fetchAll(msg.channel)
-  const message = messages.get(msg.content);
-  if (message && message.id !== msg.id) {
+  if (messages.get(msg.content)) {
     msg.reply("被ってるよ")
   }
+  messages = messages.set(msg.content, msg);
 });
 
 client.login(process.env.TOKEN);
